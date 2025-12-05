@@ -1,0 +1,206 @@
+name: Theme Painter
+description: Creates and applies custom themes to REVAMP.EXE
+trigger:
+  type: file_saved
+  file_pattern: theme_request.txt
+action:
+  type: send_message
+  message: |
+    A custom theme has been requested in theme_request.txt.
+    
+    **Your Task**: Create and add a new theme to REVAMP.EXE
+    
+    **Step 1**: Read theme_request.txt to understand the desired aesthetic
+    
+    **Step 2**: Design the theme color palette:
+    
+    **Required Colors**:
+    1. **--bg-color**: Main background (darkest)
+    2. **--panel-face**: Panel surface (medium dark)
+    3. **--border-light**: Light bevel edge (lighter than panel)
+    4. **--border-dark**: Dark bevel edge (darker than panel, often #000)
+    5. **--accent-main**: Primary accent (bright, high contrast)
+    6. **--accent-dim**: Dimmed accent (darker version of main)
+    7. **--title-1**: Title bar gradient start
+    8. **--title-2**: Title bar gradient end
+    9. **--selection-bg**: Selected item background
+    
+    **Step 3**: Follow Color Theory Guidelines:
+    
+    **Contrast Requirements**:
+    - Background to accent: High contrast (4.5:1 minimum)
+    - Panel to border: Visible difference
+    - Title gradient: Smooth transition
+    
+    **Color Relationships**:
+    - accent-dim = accent-main with reduced lightness
+    - border-dark = Usually #000 or very dark
+    - border-light = Lighter than panel-face
+    - title-1 = Darker than title-2
+    
+    **Step 4**: Theme Categories and Examples:
+    
+    **Retro Computing**:
+    - Amber Terminal: Orange/amber on black
+    - Green Screen: Bright green on black
+    - IBM Blue: Blue on dark blue
+    
+    **Cyberpunk**:
+    - Neon Pink: Hot pink on dark purple
+    - Cyber Teal: Teal on dark blue
+    - Matrix: Bright green on black
+    
+    **Vaporwave**:
+    - Miami Vice: Pink/cyan on dark blue
+    - Sunset: Orange/pink gradient on purple
+    - Pastel Dreams: Soft pink on lavender
+    
+    **Gothic**:
+    - Blood Moon: Red on black
+    - Purple Haze: Purple on dark purple
+    - Midnight: Dark blue on black
+    
+    **Vintage**:
+    - Sepia: Brown/tan on cream
+    - Vintage Radio: Gold on brown
+    - Art Deco: Gold/black on dark green
+    
+    **Meme/Fun**:
+    - Hot Dog Stand: Red/yellow (Windows 3.1)
+    - Barbie: Hot pink on pink
+    - Toxic: Lime green on black
+    
+    **Step 5**: Create Theme Object:
+    
+    ```javascript
+    { 
+        name: "THEME_NAME", 
+        vars: { 
+            '--bg-color': '#1a1a1a',
+            '--panel-face': '#2d2d2d',
+            '--border-light': '#4d4d4d',
+            '--border-dark': '#000000',
+            '--accent-main': '#ff00ff',
+            '--accent-dim': '#550055',
+            '--title-1': '#440044',
+            '--title-2': '#880088',
+            '--selection-bg': '#440044'
+        }
+    }
+    ```
+    
+    **Step 6**: Add to themes array in index.html:
+    
+    Find the `themes` array (near line 200) and add your theme:
+    
+    ```javascript
+    const themes = [
+        // ... existing themes
+        { name: "YOUR_THEME", vars: { /* your colors */ }}
+    ];
+    ```
+    
+    **Step 7**: Test the theme:
+    
+    1. Open index.html in browser
+    2. Click 🎨 SKINS button repeatedly
+    3. Verify your theme appears
+    4. Check all UI elements:
+       - Title bars
+       - Panels
+       - Buttons (normal, active, hover)
+       - Playlist (normal, hover, active)
+       - Visualizer screen
+       - Info displays
+    
+    **Step 8**: Verify Readability:
+    
+    - Text is clearly visible
+    - Bevels create depth
+    - Active states are obvious
+    - Hover states are visible
+    - Disabled states are distinguishable
+    
+    **Step 9**: Document the theme:
+    
+    Add to .kiro/specs/revamp-exe.md under "Built-in Themes":
+    
+    ```markdown
+    N. **THEME_NAME** - Description (color scheme)
+    ```
+    
+    **Color Picker Tips**:
+    
+    **HSL Method** (Recommended):
+    ```javascript
+    // Base hue (0-360)
+    const hue = 280; // Purple
+    
+    // Generate palette
+    '--bg-color': `hsl(${hue}, 20%, 10%)`,      // Dark
+    '--panel-face': `hsl(${hue}, 20%, 17%)`,    // Medium
+    '--accent-main': `hsl(${hue}, 100%, 50%)`,  // Bright
+    '--accent-dim': `hsl(${hue}, 100%, 20%)`,   // Dim
+    '--title-1': `hsl(${hue}, 50%, 20%)`,       // Dark
+    '--title-2': `hsl(${hue}, 50%, 35%)`,       // Light
+    ```
+    
+    **Hex Method**:
+    Use a color picker tool:
+    - https://coolors.co (palette generator)
+    - https://paletton.com (color scheme designer)
+    - Browser DevTools color picker
+    
+    **Step 10**: Provide Theme Summary:
+    
+    Include:
+    1. **Theme Name**: What it's called
+    2. **Inspiration**: What aesthetic it captures
+    3. **Color Palette**: List of all colors
+    4. **Best For**: What mood/genre it suits
+    5. **Screenshot**: Visual example (if possible)
+    
+    **Example Themes to Try**:
+    
+    **SYNTHWAVE**:
+    ```javascript
+    {
+        name: "SYNTHWAVE",
+        vars: {
+            '--bg-color': '#1a0033',
+            '--panel-face': '#2d0055',
+            '--border-light': '#550088',
+            '--border-dark': '#000000',
+            '--accent-main': '#ff00ff',
+            '--accent-dim': '#660066',
+            '--title-1': '#330066',
+            '--title-2': '#6600cc',
+            '--selection-bg': '#440066'
+        }
+    }
+    ```
+    
+    **TERMINAL**:
+    ```javascript
+    {
+        name: "TERMINAL",
+        vars: {
+            '--bg-color': '#000000',
+            '--panel-face': '#0a0a0a',
+            '--border-light': '#333333',
+            '--border-dark': '#000000',
+            '--accent-main': '#00ff00',
+            '--accent-dim': '#003300',
+            '--title-1': '#001100',
+            '--title-2': '#003300',
+            '--selection-bg': '#002200'
+        }
+    }
+    ```
+    
+    After creating the theme, respond with:
+    1. Theme name and description
+    2. Color palette (all 9 colors)
+    3. Inspiration/aesthetic
+    4. Test results (readability, contrast, etc.)
+enabled: true

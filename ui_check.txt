@@ -1,0 +1,7 @@
+Please check UI consistency across all themes
+
+Make sure:
+- All colors use CSS variables
+- Bevels are consistent
+- Active states are clear
+- Text is readable in all themes

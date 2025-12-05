@@ -1,0 +1,236 @@
+name: UI Consistency Checker
+description: Ensures UI consistency and retro aesthetic across REVAMP.EXE
+trigger:
+  type: file_saved
+  file_pattern: ui_check.txt
+action:
+  type: send_message
+  message: |
+    A UI consistency check has been requested in ui_check.txt.
+    
+    **Your Task**: Audit and maintain UI consistency in REVAMP.EXE
+    
+    **Step 1**: Read ui_check.txt to understand the specific concern
+    
+    **Step 2**: Check Core UI Principles:
+    
+    **Principle 1: Retro Aesthetic**
+    - 3D bevels on all panels (light top-left, dark bottom-right)
+    - Monospace fonts (Courier New)
+    - Dark backgrounds with bright accents
+    - Rack-style component layout
+    - Winamp-inspired controls
+    
+    **Principle 2: Theme Consistency**
+    - All colors use CSS variables
+    - No hardcoded colors (except black #000 for screens)
+    - Theme variables properly applied
+    - Smooth transitions on theme change
+    
+    **Principle 3: Visual Hierarchy**
+    - Title bars clearly separated
+    - Controls grouped logically
+    - Active states clearly visible
+    - Disabled states properly styled
+    
+    **Step 3**: Audit Checklist:
+    
+    **CSS Variables Usage**:
+    ```css
+    ✓ --bg-color: Main background
+    ✓ --panel-face: Panel surfaces
+    ✓ --border-light: Light bevel edges
+    ✓ --border-dark: Dark bevel edges
+    ✓ --accent-main: Primary accent
+    ✓ --accent-dim: Dimmed accent
+    ✓ --title-1: Title gradient start
+    ✓ --title-2: Title gradient end
+    ✓ --selection-bg: Selected items
+    ✓ --font-stack: Font family
+    ```
+    
+    **Bevel Consistency**:
+    ```css
+    /* Standard bevel pattern */
+    border: 2px solid var(--border-light);
+    border-right-color: var(--border-dark);
+    border-bottom-color: var(--border-dark);
+    
+    /* Inset bevel pattern */
+    border: 2px solid var(--border-dark);
+    border-right-color: var(--border-light);
+    border-bottom-color: var(--border-light);
+    ```
+    
+    **Button States**:
+    ```css
+    /* Normal */
+    .btn { background: linear-gradient(to bottom, #444, #222); }
+    
+    /* Active */
+    .btn:active { transform: translateY(1px); }
+    
+    /* Mode Active */
+    .btn.active-mode { 
+        background: linear-gradient(to bottom, var(--accent-dim), #000);
+        color: var(--accent-main);
+    }
+    ```
+    
+    **Step 4**: Common UI Issues to Check:
+    
+    **Issue 1: Hardcoded Colors**
+    ```css
+    /* BAD */
+    color: #00ff00;
+    background: #191919;
+    
+    /* GOOD */
+    color: var(--accent-main);
+    background: var(--bg-color);
+    ```
+    
+    **Issue 2: Inconsistent Bevels**
+    ```css
+    /* BAD (flat border) */
+    border: 1px solid #666;
+    
+    /* GOOD (3D bevel) */
+    border: 2px solid var(--border-light);
+    border-right-color: var(--border-dark);
+    border-bottom-color: var(--border-dark);
+    ```
+    
+    **Issue 3: Missing Active States**
+    ```css
+    /* BAD (no feedback) */
+    .btn { cursor: pointer; }
+    
+    /* GOOD (visual feedback) */
+    .btn:active { 
+        transform: translateY(1px);
+        border-style: inset;
+    }
+    ```
+    
+    **Issue 4: Poor Contrast**
+    ```css
+    /* BAD (hard to read) */
+    color: #333;
+    background: #222;
+    
+    /* GOOD (clear contrast) */
+    color: var(--accent-main);
+    background: #000;
+    ```
+    
+    **Step 5**: Component-Specific Checks:
+    
+    **Title Bars**:
+    - Gradient background using --title-1 and --title-2
+    - White text with black text-shadow
+    - Consistent padding (3-4px vertical, 6-8px horizontal)
+    - Window controls on right (minimize, maximize, close)
+    
+    **Decks/Panels**:
+    - Background: var(--panel-face)
+    - 3D bevel borders
+    - Consistent padding (8-10px)
+    - Proper spacing between elements (4-5px)
+    
+    **Buttons**:
+    - Gradient background (light to dark)
+    - 3D bevel borders
+    - Uppercase text
+    - Bold font
+    - Active state (pressed effect)
+    - Disabled state (reduced opacity)
+    
+    **Screens/Displays**:
+    - Black background (#000)
+    - Accent color text
+    - Inset borders
+    - Monospace font
+    - Proper padding
+    
+    **Playlist**:
+    - Black background
+    - Accent color text
+    - Hover state (dimmed accent background)
+    - Active state (bright accent background, inverted text)
+    - Custom scrollbar (themed)
+    
+    **Step 6**: Accessibility Checks:
+    
+    **Contrast Ratios**:
+    - Text on background: Minimum 4.5:1
+    - Active elements: Minimum 3:1
+    - Disabled elements: Clearly distinguishable
+    
+    **Interactive Elements**:
+    - Cursor changes on hover (pointer)
+    - Visual feedback on click
+    - Keyboard accessible (where applicable)
+    - Touch-friendly sizes (minimum 44x44px)
+    
+    **Step 7**: Theme Compatibility:
+    
+    Test all themes:
+    - CLASSIC (green)
+    - VAMPIRE (red)
+    - CYBER-BLUE (cyan)
+    - GOLDEN AGE (gold)
+    - HOT DOG (red/yellow)
+    
+    Verify:
+    - All text is readable
+    - Bevels are visible
+    - Active states are clear
+    - Gradients work properly
+    
+    **Step 8**: Responsive Behavior:
+    
+    Check:
+    - Fixed width (380px) maintained
+    - Canvas scales properly
+    - Playlist scrolls correctly
+    - Buttons don't wrap
+    - Text doesn't overflow
+    
+    **Step 9**: Animation Consistency:
+    
+    **Transitions**:
+    - Theme changes: 0.5s
+    - Hover states: 0.2s
+    - Active states: Instant
+    - Fade-ins: 1s
+    
+    **Animations**:
+    - Header fade-in on load
+    - Smooth theme transitions
+    - No jarring changes
+    
+    **Step 10**: Provide UI Audit Report:
+    
+    Include:
+    1. **Issues Found**: List UI inconsistencies
+    2. **Fixes Applied**: What was corrected
+    3. **Theme Compatibility**: Test results for all themes
+    4. **Accessibility Notes**: Any concerns
+    5. **Recommendations**: Suggested improvements
+    
+    **Common Fixes**:
+    - Replace hardcoded colors with CSS variables
+    - Add missing bevels to panels
+    - Standardize button styles
+    - Improve contrast ratios
+    - Add missing hover/active states
+    - Fix text overflow issues
+    - Align spacing consistently
+    
+    After auditing, respond with:
+    1. UI issues found
+    2. Fixes applied
+    3. Theme compatibility status
+    4. Any recommendations for improvement
+enabled: true

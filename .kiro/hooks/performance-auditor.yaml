@@ -1,0 +1,189 @@
+name: Performance Auditor
+description: Audits and optimizes performance of the audio visualizer
+trigger:
+  type: file_saved
+  file_pattern: performance_audit.txt
+action:
+  type: send_message
+  message: |
+    A performance audit has been requested in performance_audit.txt.
+    
+    **Your Task**: Analyze and optimize REVAMP.EXE performance
+    
+    **Step 1**: Read performance_audit.txt to understand the concern
+    
+    **Step 2**: Analyze current performance characteristics:
+    
+    **Rendering Performance**:
+    - Check `animate()` function for inefficiencies
+    - Look for allocations in render loop (new Array, new Object, etc.)
+    - Identify expensive operations (gradients, shadows, complex paths)
+    - Check for unnecessary calculations
+    
+    **Memory Performance**:
+    - Check for memory leaks (event listeners, intervals, timeouts)
+    - Verify arrays are reused (dataArray, timeArray, barPeaks, matrixDrops)
+    - Check for DOM manipulation in render loop
+    
+    **Audio Performance**:
+    - Verify AudioContext is initialized only once
+    - Check analyser settings (fftSize, smoothingTimeConstant)
+    - Verify proper cleanup on mode switch
+    
+    **Step 3**: Common Performance Issues to Check:
+    
+    **Issue 1: Allocations in Render Loop**
+    ```javascript
+    // BAD (allocates every frame)
+    const data = new Uint8Array(bufferLength);
+    
+    // GOOD (reuse existing array)
+    analyser.getByteFrequencyData(dataArray);
+    ```
+    
+    **Issue 2: Expensive Canvas Operations**
+    ```javascript
+    // BAD (creates gradient every frame)
+    for(let i=0; i<100; i++) {
+        const g = ctx.createLinearGradient(...);
+        ctx.fillStyle = g;
+        ctx.fillRect(...);
+    }
+    
+    // GOOD (use simple colors)
+    for(let i=0; i<100; i++) {
+        ctx.fillStyle = `hsl(${i*3}, 100%, 50%)`;
+        ctx.fillRect(...);
+    }
+    ```
+    
+    **Issue 3: Unnecessary Calculations**
+    ```javascript
+    // BAD (calculates every iteration)
+    for(let i=0; i<100; i++) {
+        const x = (i / 100) * canvas.width;
+    }
+    
+    // GOOD (calculate once)
+    const step = canvas.width / 100;
+    for(let i=0; i<100; i++) {
+        const x = i * step;
+    }
+    ```
+    
+    **Issue 4: DOM Manipulation in Render Loop**
+    ```javascript
+    // BAD (touches DOM every frame)
+    function animate() {
+        document.getElementById('fps').innerText = fps;
+        // ... rendering
+    }
+    
+    // GOOD (update DOM less frequently)
+    let frameCount = 0;
+    function animate() {
+        if(frameCount++ % 60 === 0) {
+            document.getElementById('fps').innerText = fps;
+        }
+        // ... rendering
+    }
+    ```
+    
+    **Step 4**: Optimization Strategies:
+    
+    **Strategy 1: Reduce Draw Calls**
+    - Batch similar operations
+    - Use single path for multiple shapes
+    - Minimize beginPath/stroke/fill calls
+    
+    **Strategy 2: Simplify Calculations**
+    - Pre-calculate constants
+    - Use lookup tables for expensive functions
+    - Reduce precision where acceptable
+    
+    **Strategy 3: Optimize Loops**
+    - Reduce iteration count
+    - Cache array lengths
+    - Use typed arrays (Uint8Array, Float32Array)
+    
+    **Strategy 4: Conditional Rendering**
+    - Skip invisible elements
+    - Use level-of-detail (LOD)
+    - Reduce quality on low-end devices
+    
+    **Step 5**: Profiling Tools:
+    
+    **Browser DevTools**:
+    - Performance tab: Record and analyze frame timing
+    - Memory tab: Check for leaks and allocations
+    - Rendering tab: Enable paint flashing, FPS meter
+    
+    **Manual FPS Counter**:
+    ```javascript
+    let lastTime = performance.now();
+    let frameCount = 0;
+    let fps = 0;
+    
+    function animate() {
+        const now = performance.now();
+        frameCount++;
+        
+        if(now - lastTime >= 1000) {
+            fps = frameCount;
+            frameCount = 0;
+            lastTime = now;
+            console.log('FPS:', fps);
+        }
+        
+        // ... rendering
+    }
+    ```
+    
+    **Step 6**: Mode-Specific Optimizations:
+    
+    **Bars Mode**:
+    - Reduce bar count if slow (64 → 32)
+    - Skip peak hold calculations
+    - Use simpler colors (solid instead of gradient)
+    
+    **Matrix Rain**:
+    - Reduce column count
+    - Update every N frames instead of every frame
+    - Limit character set size
+    
+    **Milkdrop Modes**:
+    - Reduce feedback quality (scale factor)
+    - Simplify shape rendering
+    - Skip rotation if not needed
+    
+    **Step 7**: Provide Optimization Report:
+    
+    Include:
+    1. **Issues Found**: List performance problems
+    2. **Optimizations Applied**: What was changed
+    3. **Performance Impact**: Before/after FPS
+    4. **Trade-offs**: Any visual quality reductions
+    5. **Recommendations**: Further improvements
+    
+    **Step 8**: Update Documentation:
+    - Update performance metrics in .kiro/specs/revamp-exe.md
+    - Document any new optimization techniques
+    - Add performance tips for future developers
+    
+    **Target Performance**:
+    - **Desktop**: 60 FPS (all modes)
+    - **Laptop**: 55+ FPS (most modes)
+    - **Low-end**: 30+ FPS (classic modes)
+    
+    **Acceptable Trade-offs**:
+    - Reduce visual quality for performance
+    - Simplify effects on low-end devices
+    - Skip frames if necessary
+    - Lower FFT resolution (1024 → 512)
+    
+    After auditing, respond with:
+    1. Performance issues found
+    2. Optimizations applied
+    3. Performance improvement (FPS before/after)
+    4. Any recommendations for further optimization
+enabled: true

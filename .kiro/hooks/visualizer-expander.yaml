@@ -1,0 +1,109 @@
+name: Visualizer Expander
+description: Helps expand the visualizer library by adding new visualization modes to REVAMP.EXE
+trigger:
+  type: file_saved
+  file_pattern: visualizer_request.txt
+action:
+  type: send_message
+  message: |
+    A new visualizer mode has been requested in visualizer_request.txt.
+    
+    **Your Task**: Add a new visualization mode to index.html
+    
+    **Step 1**: Read visualizer_request.txt to understand what the user wants
+    
+    **Step 2**: Analyze the current visualizer modes in index.html:
+    - Find the `visList` array (contains mode names)
+    - Find the `animate()` function (contains rendering logic)
+    - Understand the pattern: `else if(visMode === N) { ... }`
+    
+    **Step 3**: Design the new visualizer:
+    - Choose appropriate rendering technique
+    - Decide if it should use rainbow colors or theme accent
+    - Determine if it needs feedback zoom (Milkdrop style)
+    - Consider performance implications
+    
+    **Step 4**: Implement the visualizer:
+    - Add mode name to `visList` array
+    - Add rendering logic in `animate()` function after existing modes
+    - Use available variables:
+      - `dataArray`: Frequency data (0-255, 512 bins)
+      - `timeArray`: Waveform data (0-255, 512 samples)
+      - `w, h`: Canvas width/height
+      - `cx, cy`: Canvas center
+      - `bass`: Bass intensity (0-1)
+      - `mids`: Mid-range intensity (0-1)
+      - `hue`: Rainbow hue (0-360, auto-cycling)
+      - `accent`: Current theme accent color
+      - `ctx`: Canvas 2D context
+    
+    **Step 5**: Follow these patterns:
+    
+    **Classic Mode** (full clear, simple rendering):
+    ```javascript
+    else if(visMode === N) { // MODE NAME
+        // Rendering code here
+        // Use: ctx.fillRect, ctx.arc, ctx.beginPath, ctx.stroke, etc.
+    }
+    ```
+    
+    **Milkdrop Mode** (feedback zoom, psychedelic):
+    ```javascript
+    else if(visMode === N) { // MODE NAME
+        // Rendering code here
+        // Note: Screen is NOT cleared, feedback zoom happens before this
+        // Draw simple shapes that will be zoomed/rotated
+    }
+    ```
+    
+    **Matrix-style Mode** (trails):
+    ```javascript
+    // Add special clear logic at top of animate():
+    if (visMode === N) { 
+        ctx.fillStyle = 'rgba(0, 0, 0, 0.1)'; 
+        ctx.fillRect(0, 0, w, h);
+    }
+    // Then add rendering logic in normal place
+    ```
+    
+    **Step 6**: Test the implementation:
+    - Verify mode cycles correctly (click canvas)
+    - Check performance (should maintain 60 FPS)
+    - Test with both local and radio modes
+    - Verify colors work with different themes
+    
+    **Step 7**: Document the new mode:
+    - Add description to .kiro/specs/revamp-exe.md
+    - Include: Type, Features, Colors, Performance
+    
+    **Common Visualizer Ideas**:
+    - Circular spectrum (radial bars)
+    - Particle system (dots following frequency)
+    - Lissajous curves (XY oscilloscope)
+    - Spectrogram (scrolling frequency history)
+    - 3D cube (perspective projection)
+    - Fireworks (bass-triggered explosions)
+    - DNA helix (rotating double helix)
+    - Plasma effect (interference patterns)
+    - Starfield (depth-based particles)
+    - Kaleidoscope (mirrored patterns)
+    
+    **Performance Tips**:
+    - Avoid allocations in render loop
+    - Reuse arrays and objects
+    - Use simple shapes (rectangles, circles, lines)
+    - Limit particle counts (< 100)
+    - Use globalAlpha for transparency instead of rgba
+    
+    **Color Tips**:
+    - Rainbow: Use `hsl(${hue + offset}, 100%, 50%)`
+    - Theme: Use `accent` variable
+    - Gradients: Use `ctx.createLinearGradient()` or `ctx.createRadialGradient()`
+    - Glow: Use `ctx.shadowBlur` and `ctx.shadowColor`
+    
+    After implementing, respond with:
+    1. Mode number and name
+    2. Brief description
+    3. Performance notes
+    4. Any special features
+enabled: true

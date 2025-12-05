@@ -1,0 +1,9 @@
+Please audit the performance of REVAMP.EXE
+
+I'm noticing some frame drops in Matrix Rain mode.
+Can you check for performance issues and optimize if needed?
+
+Focus on:
+- Matrix Rain mode specifically
+- Any allocations in the render loop
+- Expensive canvas operations

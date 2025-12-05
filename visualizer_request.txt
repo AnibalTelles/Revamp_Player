@@ -1,0 +1,7 @@
+Example: Add a "Particle Explosion" visualizer
+
+Create a visualizer where particles explode from the center when bass hits.
+- Particles should be colored based on frequency (rainbow)
+- Particles should fade out as they move away from center
+- Use additive blending for glow effect
+- Should be a Milkdrop-style mode (feedback zoom)
